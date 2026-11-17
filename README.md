@@ -1,24 +1,23 @@
 # Motion Performance Guard demo
 
-This repo shows Motion Performance Guard stopping an animation regression before it merges.
-
 ![A pull request's checks on GitHub: Motion Performance Guard fails because /pricing dropped from A to B](docs/guard-check.png)
 
-Unit tests pass. The preview deploys. The page still feels slower than it did on Monday.
+[Performance Guard](https://motion.dev/docs/performance-guard) catches regressions in animation performance before they ship to users.
 
-Guard catches that. It audits your pages with [MotionScore](https://motion.dev/docs/motionscore) on every pull request, compares each page with your main branch, and fails the check when an animation gets worse.
+It performs a runtime audit on your selected URLs with Motion's [MotionScore system](https://score.motion.dev/methodology). This detects things like layout thrashing, too many animations, scroll animation drivers and more, and then blocks PRs when URLs regress or fails your minimum performance grade.
+
+Every PR is tagged with prompts for your agent to automatically fix.
 
 ## See it in action
 
-- **[A page made slower](https://github.com/motiondivision/performance-guard-demo/pull/2)**: the pull request swaps a smooth CSS animation for 300 boxes animated from JavaScript, with a forced layout read on every frame. Guard fails the check, and its comment shows the page dropping from S to F, names the problem (frame thrashing) and the element, and gives a fix prompt you can paste into your coding agent. The regression was then accepted with the `performance-ok` label and `/guard accept`, so you can see waivers too.
-- **[A text change](https://github.com/motiondivision/performance-guard-demo/pull/3)**: nothing that moves has changed, so the check passes.
+- **[Slow animations](https://github.com/motiondivision/performance-guard-demo/pull/2)**: This PR swaps a smooth CSS animation for 300 boxes animated from JavaScript, with a forced layout read on every frame. Guard fails the check, and its comment shows the page dropping from S to F, names the problem (frame thrashing) and the element, and gives a fix prompt you can either paste into your agent or a monitoring agent can fix automatically. The regression was then accepted with the `performance-ok` label and `/guard accept`, you can use either to skip a check.
+- **[Simple text change](https://github.com/motiondivision/performance-guard-demo/pull/3)**: This PR passes as no text changes were made.
 
 ## How it works
 
-1. A workflow runs the Guard Action on your own runner. It audits your pages with MotionScore, so audits are unlimited.
-2. Pushes to `main` record a baseline grade for each page.
-3. Each pull request is compared with that baseline. The Motion Performance app posts one comment and a check named **Motion Performance Guard**.
-4. Make the check required, and a regression can't merge. A maintainer can still accept it with the `performance-ok` label or a `/guard accept` comment.
+1. Pushes to `main` record a baseline grade for each page.
+2. Each pull request is compared with that baseline. The Motion Performance app posts one comment and a check named **Motion Performance Guard**.
+3. Make the check required, and a regression can't merge. A maintainer can still accept it with the `performance-ok` label or a `/guard accept` comment.
 
 This is the whole workflow in this repo. It serves the `site/` folder on the runner, so it needs no preview deploys:
 
@@ -45,7 +44,7 @@ jobs:
           serve: npx --yes serve@14 -l 4173 site
 ```
 
-Got preview deploys on Vercel or Netlify? Guard can audit those instead. The [docs](https://motion.dev/docs/performance-guard) have both setups.
+Want to use a preview deploy instead? Guard can audit those instead. The [docs](https://motion.dev/docs/performance-guard) detail both setups.
 
 ## Add Guard to your repo
 
