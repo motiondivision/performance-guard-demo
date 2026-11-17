@@ -50,7 +50,7 @@ Want to use a preview deploy instead? Guard can audit those instead. The [docs](
 
 1. Open the [Guard dashboard](https://motion.dev/dashboard/guard) and install the Motion Performance app on your GitHub organisation.
 2. Add the workflow.
-3. Push to `main` to record a baseline, then open a pull request.
+3. Open a pull request. Guard’s first run sets the baseline, and each push to `main` updates it.
 
 The full guide is in the [Performance Guard docs](https://motion.dev/docs/performance-guard).
 
